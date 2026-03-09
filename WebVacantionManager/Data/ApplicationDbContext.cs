@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebVacantionManager.Models;
+using WebVacationManager.Models;
 
 namespace WebVacantionManager.Data
 {
@@ -22,6 +23,8 @@ namespace WebVacantionManager.Data
         }
         public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<Team> Teams { get; set; } = null!;
+        public virtual DbSet<VacationRequest> VacationRequests { get; set; } = null!;
+        
         
     }
 }

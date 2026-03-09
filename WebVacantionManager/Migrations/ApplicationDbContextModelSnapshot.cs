@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebVacantionManager.Data;
 
 #nullable disable
 
-namespace WebVacantionManager.Data.Migrations
+namespace WebVacantionManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260309200417_SeedRoles")]
-    partial class SeedRoles
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,6 +316,43 @@ namespace WebVacantionManager.Data.Migrations
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("WebVacationManager.Models.VacationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsHalfDay")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("VacationType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("VacationRequests");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -393,6 +427,17 @@ namespace WebVacantionManager.Data.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("TeamLeader");
+                });
+
+            modelBuilder.Entity("WebVacationManager.Models.VacationRequest", b =>
+                {
+                    b.HasOne("WebVacantionManager.Models.AppUser", "Applicant")
+                        .WithMany()
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
                 });
 
             modelBuilder.Entity("WebVacantionManager.Models.Project", b =>

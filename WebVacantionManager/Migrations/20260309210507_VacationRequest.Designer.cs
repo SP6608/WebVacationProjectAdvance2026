@@ -9,11 +9,11 @@ using WebVacantionManager.Data;
 
 #nullable disable
 
-namespace WebVacantionManager.Data.Migrations
+namespace WebVacantionManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260309183327_Second")]
-    partial class Second
+    [Migration("20260309210507_VacationRequest")]
+    partial class VacationRequest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,32 @@ namespace WebVacantionManager.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "3a310333-c4a5-4457-9065-a861e635d848",
+                            Name = "Ceo",
+                            NormalizedName = "CEO"
+                        },
+                        new
+                        {
+                            Id = "96554597-d11d-48bb-84d5-bbf7442a7afc",
+                            Name = "Developer",
+                            NormalizedName = "DEVELOPER"
+                        },
+                        new
+                        {
+                            Id = "e3233cd7-132a-45ca-8a32-7160411726ed",
+                            Name = "Unassigned",
+                            NormalizedName = "UNASSIGNED"
+                        },
+                        new
+                        {
+                            Id = "dd504816-18f8-420f-a69f-ca3e6386ba5c",
+                            Name = "TeamLead",
+                            NormalizedName = "TEAMLEAD"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -293,6 +319,43 @@ namespace WebVacantionManager.Data.Migrations
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("WebVacationManager.Models.VacationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsHalfDay")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("VacationType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("VacationRequests");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -367,6 +430,17 @@ namespace WebVacantionManager.Data.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("TeamLeader");
+                });
+
+            modelBuilder.Entity("WebVacationManager.Models.VacationRequest", b =>
+                {
+                    b.HasOne("WebVacantionManager.Models.AppUser", "Applicant")
+                        .WithMany()
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
                 });
 
             modelBuilder.Entity("WebVacantionManager.Models.Project", b =>
