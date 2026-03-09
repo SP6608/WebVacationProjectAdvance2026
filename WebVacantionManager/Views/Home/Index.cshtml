@@ -1,1 +1,50 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mt-4">
+    <h1 class="display-4">Vacation Manager</h1>
+    <p class="lead">Система за управление на отпуски, екипи и проекти.</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Projects</h5>
+                <p class="card-text">Преглед и управление на проектите.</p>
+                <a asp-controller="Projects" asp-action="Index" class="btn btn-primary">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Teams</h5>
+                <p class="card-text">Преглед и управление на екипите.</p>
+                <a asp-controller="Teams" asp-action="Index" class="btn btn-primary">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Vacation Requests</h5>
+                <p class="card-text">Създаване и преглед на заявки за отпуск.</p>
+                <a asp-controller="VacationRequests" asp-action="Index" class="btn btn-primary">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">My Requests</h5>
+                <p class="card-text">Преглед на моите подадени заявки.</p>
+                <a asp-controller="VacationRequests" asp-action="MyRequests" class="btn btn-primary">Open</a>
+            </div>
+        </div>
+    </div>
+</div>
