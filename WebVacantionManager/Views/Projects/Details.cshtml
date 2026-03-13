@@ -1,0 +1,40 @@
+﻿@model WebVacantionManager.ViewModels.ProjectDetailsViewModel
+
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<h2>Project Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">@Model.ProjectName</h4>
+        <p class="card-text">
+            <strong>Description:</strong> @Model.Description
+        </p>
+
+        <h5 class="mt-4">Teams</h5>
+
+        @if (Model.Teams != null && Model.Teams.Any())
+        {
+            <ul class="list-group">
+                @foreach (var team in Model.Teams)
+                {
+                    <li class="list-group-item">
+                        @team.TeamName
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No teams assigned to this project.</p>
+        }
+
+        <div class="mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+</div>

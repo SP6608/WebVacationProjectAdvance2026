@@ -1,0 +1,45 @@
+﻿@model WebVacantionManager.ViewModels.TeamsDetailsViewModel
+
+@{
+    ViewData["Title"] = "Team Details";
+}
+
+<h2>Team Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">@Model.TeamName</h4>
+
+        <p>
+            <strong>Project:</strong> @Model.ProjectName
+        </p>
+
+        <p>
+            <strong>Team Leader:</strong> @Model.TeamLeaderName
+        </p>
+
+        <h5 class="mt-4">Developers</h5>
+
+        @if (Model.Developers != null && Model.Developers.Any())
+        {
+            <ul class="list-group">
+                @foreach (var developer in Model.Developers)
+                {
+                    <li class="list-group-item">
+                        @developer.FirstName @developer.LastName (@developer.UserName)
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No developers in this team.</p>
+        }
+
+        <div class="mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+</div>

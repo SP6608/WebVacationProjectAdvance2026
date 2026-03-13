@@ -1,0 +1,57 @@
+﻿@model IEnumerable<WebVacantionManager.ViewModels.TeamIndexViewModel>
+
+@{
+    ViewData["Title"] = "Teams";
+}
+
+<h2>Teams</h2>
+
+<p>
+    <a asp-controller="Teams" asp-action="Create" class="btn btn-success">
+        Create New Team
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Team Name</th>
+            <th>Project</th>
+            <th>Team Leader</th>
+            <th>Developers</th>
+            <th style="width:200px;">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var team in Model)
+        {
+            <tr>
+                <td>@team.TeamName</td>
+                <td>@team.ProjectName</td>
+                <td>@team.TeamLeaderName</td>
+                <td>@team.DevelopersCount</td>
+
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@team.Id"
+                       class="btn btn-info btn-sm">
+                        Details
+                    </a>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@team.Id"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@team.Id"
+                       class="btn btn-danger btn-sm">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

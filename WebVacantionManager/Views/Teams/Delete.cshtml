@@ -1,0 +1,61 @@
+﻿@model WebVacantionManager.ViewModels.TeamsDeleteViewModel
+
+@{
+    ViewData["Title"] = "Delete Team";
+}
+
+<h2>Delete Team</h2>
+
+<div class="card">
+    <div class="card-body">
+
+        <h4 class="text-danger">@Model.TeamName</h4>
+
+        <p>
+            <strong>Project:</strong> @Model.ProjectName
+        </p>
+
+        <p>
+            <strong>Team Leader:</strong> @Model.TeamLeaderName
+        </p>
+
+        <h5 class="mt-3">Developers</h5>
+
+        @if (Model.Developers != null && Model.Developers.Any())
+        {
+            <ul class="list-group">
+                @foreach (var dev in Model.Developers)
+                {
+                    <li class="list-group-item">
+                        @dev.FirstName @dev.LastName (@dev.UserName)
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No developers in this team.</p>
+        }
+
+        <div class="mt-4">
+            <p class="text-warning">
+                <strong>Warning:</strong> This action cannot be undone.
+            </p>
+
+            <form asp-action="DeleteConfirmed" method="post">
+                @Html.AntiForgeryToken()
+
+                <input asp-for="Id" type="hidden" />
+
+                <button type="submit" class="btn btn-danger">
+                    Delete
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </form>
+        </div>
+
+    </div>
+</div>
