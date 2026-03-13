@@ -286,6 +286,32 @@ namespace WebVacantionManager.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            Description = "System for managing students, teachers and courses.",
+                            ProjectName = "School Management System"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Application for tracking tasks, deadlines and productivity.",
+                            ProjectName = "Task Tracker"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Web platform for booking tables and managing reservations.",
+                            ProjectName = "Restaurant Reservation System"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Application that tracks workouts, calories and progress.",
+                            ProjectName = "Fitness Tracker"
+                        });
                 });
 
             modelBuilder.Entity("WebVacantionManager.Models.Team", b =>
