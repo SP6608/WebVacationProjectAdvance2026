@@ -162,6 +162,23 @@ namespace WebVacantionManager.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1f1a1111-1111-1111-1111-111111111111",
+                            RoleId = "3a310333-c4a5-4457-9065-a861e635d848"
+                        },
+                        new
+                        {
+                            UserId = "2f2b2222-2222-2222-2222-222222222222",
+                            RoleId = "dd504816-18f8-420f-a69f-ca3e6386ba5c"
+                        },
+                        new
+                        {
+                            UserId = "3f3c3333-3333-3333-3333-333333333333",
+                            RoleId = "96554597-d11d-48bb-84d5-bbf7442a7afc"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -263,6 +280,62 @@ namespace WebVacantionManager.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1f1a1111-1111-1111-1111-111111111111",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "cbbc379b-d1fa-497e-bbe1-9b38ddd41e96",
+                            Email = "ceo@company.com",
+                            EmailConfirmed = true,
+                            FirstName = "Ivan",
+                            LastName = "Petrov",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CEO@COMPANY.COM",
+                            NormalizedUserName = "CEO@COMPANY.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENiAAKb37X4QdHo3ZxoxNyC8GtUZA7T/RDrc629Ew61KJu5zOGI6M+FNKeVh9peWYw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "5a6f8f4a-18bb-4ada-a9b5-35c6a3a94fc2",
+                            TwoFactorEnabled = false,
+                            UserName = "ceo@company.com"
+                        },
+                        new
+                        {
+                            Id = "2f2b2222-2222-2222-2222-222222222222",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8126b590-9f39-4176-a4b2-e240bef88740",
+                            Email = "teamlead@company.com",
+                            EmailConfirmed = true,
+                            FirstName = "Maria",
+                            LastName = "Ivanova",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "TEAMLEAD@COMPANY.COM",
+                            NormalizedUserName = "TEAMLEAD@COMPANY.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFkQJbaVehsmfKK9e4nMc5qViFZn0X7oxJoptLCm/JXJel8bTd42ShmM6GJpxHvvTQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "dff336a1-22a5-42a3-a988-8509869aa6d9",
+                            TwoFactorEnabled = false,
+                            UserName = "teamlead@company.com"
+                        },
+                        new
+                        {
+                            Id = "3f3c3333-3333-3333-3333-333333333333",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "281ac3ec-5564-43e0-b06e-d6bb083da7e9",
+                            Email = "developer@company.com",
+                            EmailConfirmed = true,
+                            FirstName = "Georgi",
+                            LastName = "Dimitrov",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DEVELOPER@COMPANY.COM",
+                            NormalizedUserName = "DEVELOPER@COMPANY.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEyRHU1eiuoR8qsfczFOvgO+u9kbGb7t0tJcjk7xqGlb5fa2w5uXGENj+flADrgg+Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "15be6f76-ff8c-4a11-8820-a364735d8b37",
+                            TwoFactorEnabled = false,
+                            UserName = "developer@company.com"
+                        });
                 });
 
             modelBuilder.Entity("WebVacantionManager.Models.Project", b =>
@@ -340,6 +413,28 @@ namespace WebVacantionManager.Migrations
                     b.HasIndex("TeamLeaderId");
 
                     b.ToTable("Teams");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProjectId = 3,
+                            TeamLeaderId = "2f2b2222-2222-2222-2222-222222222222",
+                            TeamName = "Backend Team"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ProjectId = 4,
+                            TeamLeaderId = "2f2b2222-2222-2222-2222-222222222222",
+                            TeamName = "Frontend Team"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ProjectId = 5,
+                            TeamName = "Mobile Team"
+                        });
                 });
 
             modelBuilder.Entity("WebVacationManager.Models.VacationRequest", b =>
