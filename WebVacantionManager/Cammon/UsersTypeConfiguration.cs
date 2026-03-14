@@ -34,7 +34,8 @@ namespace WebVacantionManager.Cammon
                 FirstName = "Maria",
                 LastName = "Ivanova",
                 EmailConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                TeamId = 1
             };
 
             AppUser developer = new AppUser
@@ -47,7 +48,8 @@ namespace WebVacantionManager.Cammon
                 FirstName = "Georgi",
                 LastName = "Dimitrov",
                 EmailConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                TeamId = 1
             };
 
             ceo.PasswordHash = passwordHasher.HashPassword(ceo, "123456");

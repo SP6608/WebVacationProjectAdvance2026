@@ -45,17 +45,15 @@ namespace WebVacantionManager.Controllers
 
             if (User.IsInRole("Ceo"))
             {
-                // CEO вижда всички заявки
+                // Ceo вижда всички заявки
             }
             else if (User.IsInRole("TeamLead"))
             {
-                query = query.Where(v =>
-                    v.Applicant.TeamId == currentUser.TeamId);
+                query = query.Where(v => v.Applicant.TeamId == currentUser.TeamId);
             }
             else
             {
-                query = query.Where(v =>
-                    v.ApplicantId == currentUserId);
+                query = query.Where(v => v.ApplicantId == currentUserId);
             }
 
             var model = query
@@ -78,14 +76,7 @@ namespace WebVacantionManager.Controllers
         {
             var model = new VacationRequestCreateViewModel
             {
-                VacationTypes = Enum.GetValues(typeof(VacationType))
-                    .Cast<VacationType>()
-                    .Select(v => new SelectListItem
-                    {
-                        Value = v.ToString(),
-                        Text = v.ToString()
-                    })
-                    .ToList()
+                VacationTypes = GetVacationTypes()
             };
 
             return View(model);
@@ -97,15 +88,7 @@ namespace WebVacantionManager.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.VacationTypes = Enum.GetValues(typeof(VacationType))
-                    .Cast<VacationType>()
-                    .Select(v => new SelectListItem
-                    {
-                        Value = v.ToString(),
-                        Text = v.ToString()
-                    })
-                    .ToList();
-
+                model.VacationTypes = GetVacationTypes();
                 return View(model);
             }
 
@@ -116,6 +99,10 @@ namespace WebVacantionManager.Controllers
                 return Unauthorized();
             }
 
+            bool isHalfDay = model.VacationType == VacationType.SickLeave
+                ? false
+                : model.IsHalfDay;
+
             VacationRequest request = new VacationRequest
             {
                 DateFrom = model.DateFrom,
@@ -124,7 +111,7 @@ namespace WebVacantionManager.Controllers
                 ApplicantId = userId,
                 CreatedOn = DateTime.UtcNow,
                 IsApproved = false,
-                IsHalfDay = model.IsHalfDay
+                IsHalfDay = isHalfDay
             };
 
             context.VacationRequests.Add(request);
@@ -198,30 +185,67 @@ namespace WebVacantionManager.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            var model = context.VacationRequests
+            string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (currentUserId == null)
+            {
+                return Unauthorized();
+            }
+
+            AppUser? currentUser = context.Users
+                .AsNoTracking()
+                .FirstOrDefault(u => u.Id == currentUserId);
+
+            if (currentUser == null)
+            {
+                return Unauthorized();
+            }
+
+            VacationRequest? request = context.VacationRequests
                 .AsNoTracking()
                 .Include(v => v.Applicant)
-                .Where(v => v.Id == id)
-                .Select(v => new VacationRequestDetailsViewModel
-                {
-                    Id = v.Id,
-                    ApplicantName = v.Applicant.FirstName + " " + v.Applicant.LastName,
-                    DateFrom = v.DateFrom,
-                    DateTo = v.DateTo,
-                    CreatedOn = v.CreatedOn,
-                    VacationType = v.VacationType.ToString(),
-                    IsHalfDay = v.IsHalfDay,
-                    IsApproved = v.IsApproved
-                })
-                .FirstOrDefault();
+                .FirstOrDefault(v => v.Id == id);
 
-            if (model == null)
+            if (request == null)
             {
                 return NotFound();
             }
 
+            bool canView = false;
+
+            if (User.IsInRole("Ceo"))
+            {
+                canView = true;
+            }
+            else if (User.IsInRole("TeamLead"))
+            {
+                canView = request.Applicant.TeamId == currentUser.TeamId;
+            }
+            else
+            {
+                canView = request.ApplicantId == currentUserId;
+            }
+
+            if (!canView)
+            {
+                return Forbid();
+            }
+
+            VacationRequestDetailsViewModel model = new VacationRequestDetailsViewModel
+            {
+                Id = request.Id,
+                ApplicantName = request.Applicant.FirstName + " " + request.Applicant.LastName,
+                DateFrom = request.DateFrom,
+                DateTo = request.DateTo,
+                CreatedOn = request.CreatedOn,
+                VacationType = request.VacationType.ToString(),
+                IsHalfDay = request.IsHalfDay,
+                IsApproved = request.IsApproved
+            };
+
             return View(model);
         }
+
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -253,33 +277,19 @@ namespace WebVacantionManager.Controllers
                 DateTo = request.DateTo,
                 IsHalfDay = request.IsHalfDay,
                 VacationType = request.VacationType,
-                VacationTypes = Enum.GetValues(typeof(VacationType))
-                    .Cast<VacationType>()
-                    .Select(v => new SelectListItem
-                    {
-                        Value = v.ToString(),
-                        Text = v.ToString()
-                    })
-                    .ToList()
+                VacationTypes = GetVacationTypes()
             };
 
             return View(model);
         }
+
         [HttpPost]
-        
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(VacationRequestEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.VacationTypes = Enum.GetValues(typeof(VacationType))
-                    .Cast<VacationType>()
-                    .Select(v => new SelectListItem
-                    {
-                        Value = v.ToString(),
-                        Text = v.ToString()
-                    })
-                    .ToList();
-
+                model.VacationTypes = GetVacationTypes();
                 return View(model);
             }
 
@@ -305,13 +315,16 @@ namespace WebVacantionManager.Controllers
 
             request.DateFrom = model.DateFrom;
             request.DateTo = model.DateTo;
-            request.IsHalfDay = model.IsHalfDay;
             request.VacationType = model.VacationType;
+            request.IsHalfDay = model.VacationType == VacationType.SickLeave
+                ? false
+                : model.IsHalfDay;
 
             context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         public IActionResult Delete(int id)
         {
@@ -351,6 +364,7 @@ namespace WebVacantionManager.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -379,6 +393,18 @@ namespace WebVacantionManager.Controllers
             context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private IEnumerable<SelectListItem> GetVacationTypes()
+        {
+            return Enum.GetValues(typeof(VacationType))
+                .Cast<VacationType>()
+                .Select(v => new SelectListItem
+                {
+                    Value = v.ToString(),
+                    Text = v.ToString()
+                })
+                .ToList();
         }
     }
 }
