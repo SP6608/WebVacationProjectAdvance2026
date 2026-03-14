@@ -205,6 +205,67 @@ namespace WebVacantionManager.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public IActionResult Delete(string id)
+        {
+            AppUser? user = context.Users
+                .AsNoTracking()
+                .Include(u => u.Team)
+                .FirstOrDefault(u => u.Id == id);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            string? roleName = userManager.GetRolesAsync(user).Result.FirstOrDefault();
+
+            UsersDeleteViewModel model = new UsersDeleteViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName ?? string.Empty,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                RoleName = roleName,
+                TeamName = user.Team != null ? user.Team.TeamName : null
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(string id)
+        {
+            AppUser? user = context.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var roles = userManager.GetRolesAsync(user).Result;
+
+            if (roles.Any())
+            {
+                var removeRolesResult = userManager.RemoveFromRolesAsync(user, roles).Result;
+
+                if (!removeRolesResult.Succeeded)
+                {
+                    ModelState.AddModelError(string.Empty, "Unable to remove user roles.");
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            var deleteResult = userManager.DeleteAsync(user).Result;
+
+            if (!deleteResult.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Unable to delete user.");
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
