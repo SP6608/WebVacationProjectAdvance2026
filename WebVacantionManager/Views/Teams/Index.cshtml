@@ -7,9 +7,13 @@
 <h2>Teams</h2>
 
 <p>
-    <a asp-controller="Teams" asp-action="Create" class="btn btn-success">
-        Create New Team
-    </a>
+    @if (User.IsInRole("Ceo"))
+    {
+        <a asp-controller="Teams" asp-action="Create" class="btn btn-success">
+            Create New Team
+        </a>
+    }
+    
 </p>
 
 <table class="table table-bordered table-striped">
