@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using WebVacantionManager.Data;
 using WebVacantionManager.Models;
 using WebVacantionManager.ViewModels;
 
 namespace WebVacantionManager.Controllers
 {
+    
     public class TeamsController : Controller
     {
         private readonly ApplicationDbContext context;
@@ -15,6 +17,7 @@ namespace WebVacantionManager.Controllers
         {
             this.context = context;
         }
+        [AllowAnonymous]
         public IActionResult Index()
         {
             List<TeamIndexViewModel> model = this.context
@@ -34,6 +37,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
         [HttpGet]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Create()
         {
             TeamCreateViewModel model = new TeamCreateViewModel
@@ -60,6 +64,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
         [HttpPost]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Create(TeamCreateViewModel model)
         {
             if (!ModelState.IsValid)
@@ -98,6 +103,7 @@ namespace WebVacantionManager.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             Team? team = context.Teams
@@ -121,6 +127,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
         [HttpGet]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Edit(int id)
         {
             Team? team = context.Teams
@@ -161,6 +168,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
         [HttpPost]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Edit(TeamsEditViewModel model)
         {
             if (!ModelState.IsValid)
@@ -200,7 +208,7 @@ namespace WebVacantionManager.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        [Authorize(Roles = "CEO")]
+        [Authorize(Roles = "Ceo")]
         [HttpGet]
         public IActionResult Delete(int id)
         {
@@ -230,7 +238,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
         [HttpPost]
-        [Authorize(Roles = "CEO")]
+        [Authorize(Roles = "Ceo")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
