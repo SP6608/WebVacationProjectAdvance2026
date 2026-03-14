@@ -11,20 +11,29 @@ namespace WebVacantionManager.Data
             : base(options)
         {
         }
+
+        public DbSet<Project> Projects { get; set; } = null!;
+        public DbSet<Team> Teams { get; set; } = null!;
+        public DbSet<VacationRequest> VacationRequests { get; set; } = null!;
+        //public DbSet<MyRequest> MyRequests {  get; set; }   = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
             builder.Entity<AppUser>()
                 .HasOne(u => u.Team)
                 .WithMany(t => t.Developers)
                 .HasForeignKey(u => u.TeamId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<VacationRequest>()
+                .HasOne(v => v.Applicant)
+                .WithMany(u => u.VacationRequests)
+                .HasForeignKey(v => v.ApplicantId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
-        public virtual DbSet<Project> Projects { get; set; } = null!;
-        public virtual DbSet<Team> Teams { get; set; } = null!;
-        public virtual DbSet<VacationRequest> VacationRequests { get; set; } = null!;
-        
-        
     }
 }

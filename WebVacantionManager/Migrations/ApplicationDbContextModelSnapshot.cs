@@ -286,7 +286,7 @@ namespace WebVacantionManager.Migrations
                         {
                             Id = "1f1a1111-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cbbc379b-d1fa-497e-bbe1-9b38ddd41e96",
+                            ConcurrencyStamp = "f2ed39e1-9ec9-435c-a007-7a9d25a0a83f",
                             Email = "ceo@company.com",
                             EmailConfirmed = true,
                             FirstName = "Ivan",
@@ -294,9 +294,9 @@ namespace WebVacantionManager.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "CEO@COMPANY.COM",
                             NormalizedUserName = "CEO@COMPANY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENiAAKb37X4QdHo3ZxoxNyC8GtUZA7T/RDrc629Ew61KJu5zOGI6M+FNKeVh9peWYw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJS19U4T2jwQ7FDT0cFEKnLYy2e6D05vGY2vQR8+np8jKXKdMSycrIJ91llq+evYeQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5a6f8f4a-18bb-4ada-a9b5-35c6a3a94fc2",
+                            SecurityStamp = "515c54c3-8362-4b61-b271-b5a4aa5354cd",
                             TwoFactorEnabled = false,
                             UserName = "ceo@company.com"
                         },
@@ -304,7 +304,7 @@ namespace WebVacantionManager.Migrations
                         {
                             Id = "2f2b2222-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8126b590-9f39-4176-a4b2-e240bef88740",
+                            ConcurrencyStamp = "8ccde49a-0e94-43db-9c97-e6b8d9c00bb0",
                             Email = "teamlead@company.com",
                             EmailConfirmed = true,
                             FirstName = "Maria",
@@ -312,9 +312,9 @@ namespace WebVacantionManager.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TEAMLEAD@COMPANY.COM",
                             NormalizedUserName = "TEAMLEAD@COMPANY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFkQJbaVehsmfKK9e4nMc5qViFZn0X7oxJoptLCm/JXJel8bTd42ShmM6GJpxHvvTQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECfusNOsK726ARVK2N8WkdwB2vGwDvyjpsv9yjbCrmOV872/4UfYSKWITy/DZpdLfg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "dff336a1-22a5-42a3-a988-8509869aa6d9",
+                            SecurityStamp = "8f6053af-ace4-429c-9930-c769e2f159f4",
                             TwoFactorEnabled = false,
                             UserName = "teamlead@company.com"
                         },
@@ -322,7 +322,7 @@ namespace WebVacantionManager.Migrations
                         {
                             Id = "3f3c3333-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "281ac3ec-5564-43e0-b06e-d6bb083da7e9",
+                            ConcurrencyStamp = "99aece31-e57b-4182-a6fc-0d9ccbf90c7a",
                             Email = "developer@company.com",
                             EmailConfirmed = true,
                             FirstName = "Georgi",
@@ -330,9 +330,9 @@ namespace WebVacantionManager.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DEVELOPER@COMPANY.COM",
                             NormalizedUserName = "DEVELOPER@COMPANY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEyRHU1eiuoR8qsfczFOvgO+u9kbGb7t0tJcjk7xqGlb5fa2w5uXGENj+flADrgg+Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEA9dyEdRzpGRkeouEeP1WrP2WvHqqk1Hf6smDMjBnjp/TRQ17Mzw0q/FlJ3aDzb5pw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "15be6f76-ff8c-4a11-8820-a364735d8b37",
+                            SecurityStamp = "da312037-7cee-4424-99af-d9ac09f98af9",
                             TwoFactorEnabled = false,
                             UserName = "developer@company.com"
                         });
@@ -472,6 +472,41 @@ namespace WebVacantionManager.Migrations
                     b.HasIndex("ApplicantId");
 
                     b.ToTable("VacationRequests");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ApplicantId = "3f3c3333-3333-3333-3333-333333333333",
+                            CreatedOn = new DateTime(2026, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateFrom = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTo = new DateTime(2026, 6, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsApproved = false,
+                            IsHalfDay = false,
+                            VacationType = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ApplicantId = "2f2b2222-2222-2222-2222-222222222222",
+                            CreatedOn = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateFrom = new DateTime(2026, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTo = new DateTime(2026, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsApproved = false,
+                            IsHalfDay = true,
+                            VacationType = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ApplicantId = "3f3c3333-3333-3333-3333-333333333333",
+                            CreatedOn = new DateTime(2026, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateFrom = new DateTime(2026, 8, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateTo = new DateTime(2026, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsApproved = true,
+                            IsHalfDay = false,
+                            VacationType = 2
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -553,12 +588,17 @@ namespace WebVacantionManager.Migrations
             modelBuilder.Entity("WebVacationManager.Models.VacationRequest", b =>
                 {
                     b.HasOne("WebVacantionManager.Models.AppUser", "Applicant")
-                        .WithMany()
+                        .WithMany("VacationRequests")
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Applicant");
+                });
+
+            modelBuilder.Entity("WebVacantionManager.Models.AppUser", b =>
+                {
+                    b.Navigation("VacationRequests");
                 });
 
             modelBuilder.Entity("WebVacantionManager.Models.Project", b =>

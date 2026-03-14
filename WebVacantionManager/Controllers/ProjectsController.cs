@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebVacantionManager.Data;
 using WebVacantionManager.Models;
@@ -6,6 +7,7 @@ using WebVacantionManager.ViewModels;
 
 namespace WebVacantionManager.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private ApplicationDbContext context;
@@ -14,6 +16,7 @@ namespace WebVacantionManager.Controllers
             this.context = context;
         }
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index()
         {
             ICollection<ProjectDetailsViewModel> models =
@@ -32,6 +35,7 @@ namespace WebVacantionManager.Controllers
             return View(models);
         }
         [HttpGet]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +57,7 @@ namespace WebVacantionManager.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             ProjectDetailsViewModel? project = context
@@ -76,6 +81,7 @@ namespace WebVacantionManager.Controllers
             return View(project);
         }
         [HttpGet]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Edit(int id)
         {
             ProjectEditViewModel? model = context
@@ -98,6 +104,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
         [HttpPost]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Edit(ProjectEditViewModel model)
         {
             if (!ModelState.IsValid)
@@ -121,6 +128,7 @@ namespace WebVacantionManager.Controllers
         }
         //Delete
         [HttpGet]
+        [Authorize(Roles = "Ceo")]
         public IActionResult Delete(int id)
         {
             ProjectDeleteViewModel? model = context
@@ -151,6 +159,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
         [HttpPost]
+        [Authorize(Roles = "Ceo")]
         public IActionResult DeleteConfirmed(int id)
         {
             Project? project = context.Projects.Find(id);

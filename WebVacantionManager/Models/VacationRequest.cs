@@ -24,7 +24,7 @@ namespace WebVacationManager.Models
         [Required]
         public VacationType VacationType { get; set; }
 
-        // Navigation
+        // Foreign Key
         public string ApplicantId { get; set; } = null!;
 
         [ForeignKey(nameof(ApplicantId))]

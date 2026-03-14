@@ -37,19 +37,25 @@
                         Details
                     </a>
 
-                    <a asp-controller="Projects"
-                       asp-action="Edit"
-                       asp-route-id="@project.Id"
-                       class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
+                  @if (User.IsInRole("Ceo"))
+                    {
+                        <a asp-controller="Projects"
+                           asp-action="Edit"
+                           asp-route-id="@project.Id"
+                           class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+                    }
 
-                    <a asp-controller="Projects"
-                       asp-action="Delete"
-                       asp-route-id="@project.Id"
-                       class="btn btn-danger btn-sm">
-                        Delete
-                    </a>
+                   @if (User.IsInRole("Ceo"))
+                    {
+                        <a asp-controller="Projects"
+                           asp-action="Delete"
+                           asp-route-id="@project.Id"
+                           class="btn btn-danger btn-sm">
+                            Delete
+                        </a>
+                    }
 
                 </td>
             </tr>
