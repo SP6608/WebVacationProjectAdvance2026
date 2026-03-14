@@ -1,0 +1,47 @@
+﻿@model WebVacantionManager.ViewModels.UsersDeleteViewModel
+
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<h2>Delete User</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p>
+            <strong>UserName:</strong> @Model.UserName
+        </p>
+
+        <p>
+            <strong>First Name:</strong> @Model.FirstName
+        </p>
+
+        <p>
+            <strong>Last Name:</strong> @Model.LastName
+        </p>
+
+        <p>
+            <strong>Email:</strong> @Model.Email
+        </p>
+
+        <p>
+            <strong>Role:</strong> @Model.RoleName
+        </p>
+
+        <p>
+            <strong>Team:</strong> @Model.TeamName
+        </p>
+
+        <p class="text-danger mt-3">
+            <strong>Are you sure you want to delete this user?</strong>
+        </p>
+
+        <form asp-action="DeleteConfirmed" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
