@@ -1,0 +1,34 @@
+﻿@model WebVacantionManager.ViewModels.VacationRequestDeleteViewModel
+
+@{
+    ViewData["Title"] = "Delete Vacation Request";
+}
+
+<h2>Delete Vacation Request</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Applicant:</strong> @Model.ApplicantName</p>
+        <p><strong>Date From:</strong> @Model.DateFrom.ToShortDateString()</p>
+        <p><strong>Date To:</strong> @Model.DateTo.ToShortDateString()</p>
+        <p><strong>Created On:</strong> @Model.CreatedOn.ToShortDateString()</p>
+        <p><strong>Vacation Type:</strong> @Model.VacationType</p>
+        <p><strong>Half Day:</strong> @(Model.IsHalfDay ? "Yes" : "No")</p>
+        <p>
+            <strong>Status:</strong>
+            @(Model.IsApproved ? "Approved" : "Pending")
+        </p>
+
+        <p class="text-danger mt-3">
+            <strong>Are you sure you want to delete this request?</strong>
+        </p>
+
+        <form asp-action="DeleteConfirmed" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

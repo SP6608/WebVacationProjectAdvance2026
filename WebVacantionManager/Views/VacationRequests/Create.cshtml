@@ -1,0 +1,44 @@
+﻿@model WebVacantionManager.ViewModels.VacationRequestCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Vacation Request";
+}
+
+<h2>Create Vacation Request</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="form-group mb-3">
+        <label asp-for="DateFrom" class="form-label"></label>
+        <input asp-for="DateFrom" type="date" class="form-control" />
+        <span asp-validation-for="DateFrom" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="DateTo" class="form-label"></label>
+        <input asp-for="DateTo" type="date" class="form-control" />
+        <span asp-validation-for="DateTo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="VacationType" class="form-label"></label>
+        <select asp-for="VacationType" asp-items="Model.VacationTypes" class="form-control">
+            <option value="">-- Select Vacation Type --</option>
+        </select>
+        <span asp-validation-for="VacationType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check mb-3">
+        <input asp-for="IsHalfDay" class="form-check-input" />
+        <label asp-for="IsHalfDay" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Request</button>
+
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,24 @@
+﻿@model WebVacantionManager.ViewModels.VacationRequestDetailsViewModel
+
+@{
+    ViewData["Title"] = "Vacation Request Details";
+}
+
+<h2>Vacation Request Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Applicant:</strong> @Model.ApplicantName</p>
+        <p><strong>Date From:</strong> @Model.DateFrom.ToShortDateString()</p>
+        <p><strong>Date To:</strong> @Model.DateTo.ToShortDateString()</p>
+        <p><strong>Created On:</strong> @Model.CreatedOn.ToShortDateString()</p>
+        <p><strong>Vacation Type:</strong> @Model.VacationType</p>
+        <p><strong>Half Day:</strong> @(Model.IsHalfDay ? "Yes" : "No")</p>
+        <p>
+            <strong>Status:</strong>
+            @(Model.IsApproved ? "Approved" : "Pending")
+        </p>
+
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+</div>

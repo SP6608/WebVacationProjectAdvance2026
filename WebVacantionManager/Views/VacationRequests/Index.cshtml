@@ -1,0 +1,89 @@
+﻿@model IEnumerable<WebVacantionManager.ViewModels.VacationRequestIndexViewModel>
+
+@{
+    ViewData["Title"] = "Vacation Requests";
+}
+
+<h2>Vacation Requests</h2>
+
+<p>
+    <a asp-controller="VacationRequests" asp-action="Create" class="btn btn-success">
+        Create Vacation Request
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Applicant</th>
+            <th>Date From</th>
+            <th>Date To</th>
+            <th>Vacation Type</th>
+            <th>Approved</th>
+            <th style="width:260px;">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.ApplicantName</td>
+
+                <td>@request.DateFrom.ToShortDateString()</td>
+
+                <td>@request.DateTo.ToShortDateString()</td>
+
+                <td>@request.VacationType</td>
+
+                <td>
+                    @if (request.IsApproved)
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@request.Id"
+                       class="btn btn-info btn-sm">
+                        Details
+                    </a>
+
+                    @if (!request.IsApproved)
+                    {
+                        <a asp-action="Edit"
+                           asp-route-id="@request.Id"
+                           class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@request.Id"
+                           class="btn btn-danger btn-sm">
+                            Delete
+                        </a>
+                    }
+
+                    @if (!request.IsApproved && (User.IsInRole("Ceo") || User.IsInRole("TeamLead")))
+                    {
+                        <form asp-action="Approve"
+                              asp-route-id="@request.Id"
+                              method="post"
+                              class="d-inline">
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-success btn-sm">
+                                Approve
+                            </button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
