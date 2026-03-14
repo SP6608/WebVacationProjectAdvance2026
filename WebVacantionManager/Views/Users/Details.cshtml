@@ -1,0 +1,53 @@
+﻿@model WebVacantionManager.ViewModels.UsersDetailsViewModel
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<h2>User Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p>
+            <strong>UserName:</strong> @Model.UserName
+        </p>
+
+        <p>
+            <strong>First Name:</strong> @Model.FirstName
+        </p>
+
+        <p>
+            <strong>Last Name:</strong> @Model.LastName
+        </p>
+
+        <p>
+            <strong>Email:</strong> @Model.Email
+        </p>
+
+        <p>
+            <strong>Role:</strong> @Model.RoleName
+        </p>
+
+        <p>
+            <strong>Team:</strong> @Model.TeamName
+        </p>
+
+        <p>
+            <strong>Vacation Requests:</strong> @Model.VacationRequestsCount
+        </p>
+
+        <div class="mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                Edit
+            </a>
+
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                Delete
+            </a>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Back
+            </a>
+        </div>
+    </div>
+</div>
