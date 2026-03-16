@@ -15,7 +15,7 @@ namespace WebVacantionManager.Data
         public DbSet<Project> Projects { get; set; } = null!;
         public DbSet<Team> Teams { get; set; } = null!;
         public DbSet<VacationRequest> VacationRequests { get; set; } = null!;
-        //public DbSet<MyRequest> MyRequests {  get; set; }   = null!;
+       
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
