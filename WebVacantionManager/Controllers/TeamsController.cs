@@ -1,260 +1,124 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
-using WebVacantionManager.Data;
-using WebVacantionManager.Models;
+using WebVacantionManager.Services.Contracts;
 using WebVacantionManager.ViewModels;
 
 namespace WebVacantionManager.Controllers
 {
-    
     public class TeamsController : Controller
     {
-        private readonly ApplicationDbContext context;
-        public TeamsController(ApplicationDbContext context)
+        private readonly ITeamService teamService;
+
+        public TeamsController(ITeamService teamService)
         {
-            this.context = context;
+            this.teamService = teamService;
         }
+
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<TeamIndexViewModel> model = this.context
-                .Teams
-                .AsNoTracking()
-                .Include(t => t.Project)
-                .Include(t => t.TeamLeader)
-                .Include(t => t.Developers)
-                .Select(t => new TeamIndexViewModel
-                {
-                    Id = t.Id,
-                    TeamName = t.TeamName,
-                    ProjectName = t.Project != null ? t.Project.ProjectName : null,
-                    TeamLeaderName = t.TeamLeader != null ? t.TeamLeader.UserName : null,
-                    DevelopersCount = t.Developers.Count
-                }).ToList();
+            ICollection<TeamIndexViewModel> model = await teamService.GetAllAsync();
             return View(model);
         }
+
         [HttpGet]
         [Authorize(Roles = "Ceo")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            TeamCreateViewModel model = new TeamCreateViewModel
-            {
-                Projects = context.Projects
-                    .AsNoTracking()
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.Id.ToString(),
-                        Text = p.ProjectName
-                    })
-                    .ToList(),
-
-                TeamLeaders = context.Users
-                    .AsNoTracking()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = u.Id,
-                        Text = u.UserName!
-                    })
-                    .ToList()
-            };
-
+            TeamCreateViewModel model = await teamService.GetCreateModelAsync();
             return View(model);
         }
+
         [HttpPost]
         [Authorize(Roles = "Ceo")]
-        public IActionResult Create(TeamCreateViewModel model)
+        public async Task<IActionResult> Create(TeamCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Projects = context.Projects
-                    .AsNoTracking()
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.Id.ToString(),
-                        Text = p.ProjectName
-                    })
-                    .ToList();
-
-                model.TeamLeaders = context.Users
-                    .AsNoTracking()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = u.Id,
-                        Text = u.UserName!
-                    })
-                    .ToList();
-
+                await teamService.PopulateCreateModelAsync(model);
                 return View(model);
             }
 
-            Team team = new Team
-            {
-                TeamName = model.TeamName,
-                ProjectId = model.ProjectId,
-                TeamLeaderId = model.TeamLeaderId
-            };
-
-            context.Teams.Add(team);
-            context.SaveChanges();
+            await teamService.CreateAsync(model);
 
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            Team? team = context.Teams
-                .AsNoTracking()
-                .Include(t => t.Project)
-                .Include(t => t.TeamLeader)
-                .Include(t => t.Developers)
-                .FirstOrDefault(t => t.Id == id);
-            if (team == null)
+            TeamsDetailsViewModel? model = await teamService.GetByIdAsync(id);
+
+            if (model == null)
             {
                 return NotFound();
             }
-            TeamsDetailsViewModel model = new TeamsDetailsViewModel
-            {
-                Id = team.Id,
-                TeamName = team.TeamName,
-                ProjectName = team.Project != null ? team.Project.ProjectName : null,
-                TeamLeaderName = team.TeamLeader != null ? team.TeamLeader.UserName : null,
-                Developers = team.Developers.ToList()
-            };
+
             return View(model);
         }
+
         [HttpGet]
         [Authorize(Roles = "Ceo")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            Team? team = context.Teams
-                .AsNoTracking()
-                .Include(t => t.Project)
-                .Include(t => t.TeamLeader)
-                .FirstOrDefault(t => t.Id == id);
+            TeamsEditViewModel? model = await teamService.GetForEditAsync(id);
 
-            if (team == null)
+            if (model == null)
             {
                 return NotFound();
             }
 
-            TeamsEditViewModel model = new TeamsEditViewModel
-            {
-                Id = team.Id,
-                TeamName = team.TeamName,
-                ProjectId = team.ProjectId,
-                TeamLeaderId = team.TeamLeaderId,
-                Projects = context.Projects
-                    .AsNoTracking()
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.Id.ToString(),
-                        Text = p.ProjectName
-                    })
-                    .ToList(),
-                TeamLeaders = context.Users
-                    .AsNoTracking()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = u.Id,
-                        Text = u.UserName!
-                    })
-                    .ToList()
-            };
-
             return View(model);
         }
+
         [HttpPost]
         [Authorize(Roles = "Ceo")]
-        public IActionResult Edit(TeamsEditViewModel model)
+        public async Task<IActionResult> Edit(TeamsEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Projects = context.Projects
-                    .AsNoTracking()
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.Id.ToString(),
-                        Text = p.ProjectName
-                    })
-                    .ToList();
-
-                model.TeamLeaders = context.Users
-                    .AsNoTracking()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = u.Id,
-                        Text = u.UserName!
-                    })
-                    .ToList();
-
+                await teamService.PopulateEditModelAsync(model);
                 return View(model);
             }
 
-            Team? team = context.Teams.Find(model.Id);
-            if (team == null)
+            bool isEdited = await teamService.EditAsync(model);
+
+            if (!isEdited)
             {
                 return NotFound();
             }
-
-            team.TeamName = model.TeamName;
-            team.ProjectId = model.ProjectId;
-            team.TeamLeaderId = model.TeamLeaderId;
-
-            context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
+
         [Authorize(Roles = "Ceo")]
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            Team? team = context.Teams
-                .AsNoTracking()
-                .Include(t => t.Project)
-                .Include(t => t.TeamLeader)
-                .Include(t => t.Developers)
-                .FirstOrDefault(t => t.Id == id);
+            TeamsDeleteViewModel? model = await teamService.GetForDeleteAsync(id);
 
-            if (team == null)
+            if (model == null)
             {
                 return NotFound();
             }
 
-            TeamsDeleteViewModel model = new TeamsDeleteViewModel
-            {
-                Id = team.Id,
-                TeamName = team.TeamName,
-                ProjectName = team.Project != null ? team.Project.ProjectName : null,
-                TeamLeaderName = team.TeamLeader != null
-                    ? $"{team.TeamLeader.FirstName} {team.TeamLeader.LastName}"
-                    : null,
-                Developers = team.Developers.ToList()
-            };
-
             return View(model);
         }
+
         [HttpPost]
         [Authorize(Roles = "Ceo")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Team? team = context.Teams.Find(id);
+            bool isDeleted = await teamService.DeleteAsync(id);
 
-            if (team == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.Teams.Remove(team);
-            context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
     }
 }
-    
-

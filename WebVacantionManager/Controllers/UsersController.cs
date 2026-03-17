@@ -15,7 +15,11 @@ namespace WebVacantionManager.Controllers
         private readonly ApplicationDbContext context;
         private readonly UserManager<AppUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        public UsersController(ApplicationDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+
+        public UsersController(
+            ApplicationDbContext context,
+            UserManager<AppUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             this.context = context;
             this.userManager = userManager;
@@ -48,20 +52,21 @@ namespace WebVacantionManager.Controllers
 
             return View(model);
         }
-        public IActionResult Details(string id)
+
+        public async Task<IActionResult> Details(string id)
         {
-            AppUser? user = context.Users
+            AppUser? user = await context.Users
                 .AsNoTracking()
                 .Include(u => u.Team)
                 .Include(u => u.VacationRequests)
-                .FirstOrDefault(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            string? roleName = userManager.GetRolesAsync(user).Result.FirstOrDefault();
+            string? roleName = (await userManager.GetRolesAsync(user)).FirstOrDefault();
 
             UsersDetailsViewModel model = new UsersDetailsViewModel
             {
@@ -77,19 +82,20 @@ namespace WebVacantionManager.Controllers
 
             return View(model);
         }
+
         [HttpGet]
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            AppUser? user = context.Users
+            AppUser? user = await context.Users
                 .AsNoTracking()
-                .FirstOrDefault(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            string? currentRole = userManager.GetRolesAsync(user).Result.FirstOrDefault();
+            string? currentRole = (await userManager.GetRolesAsync(user)).FirstOrDefault();
 
             UsersEditViewModel model = new UsersEditViewModel
             {
@@ -98,54 +104,55 @@ namespace WebVacantionManager.Controllers
                 LastName = user.LastName,
                 TeamId = user.TeamId,
                 RoleName = currentRole,
-                Teams = context.Teams
+                Teams = await context.Teams
                     .AsNoTracking()
                     .Select(t => new SelectListItem
                     {
                         Value = t.Id.ToString(),
                         Text = t.TeamName
                     })
-                    .ToList(),
-                Roles = roleManager.Roles
+                    .ToListAsync(),
+                Roles = await roleManager.Roles
                     .AsNoTracking()
                     .Select(r => new SelectListItem
                     {
                         Value = r.Name!,
                         Text = r.Name!
                     })
-                    .ToList()
+                    .ToListAsync()
             };
 
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(UsersEditViewModel model)
+        public async Task<IActionResult> Edit(UsersEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Teams = context.Teams
+                model.Teams = await context.Teams
                     .AsNoTracking()
                     .Select(t => new SelectListItem
                     {
                         Value = t.Id.ToString(),
                         Text = t.TeamName
                     })
-                    .ToList();
+                    .ToListAsync();
 
-                model.Roles = roleManager.Roles
+                model.Roles = await roleManager.Roles
                     .AsNoTracking()
                     .Select(r => new SelectListItem
                     {
                         Value = r.Name!,
                         Text = r.Name!
                     })
-                    .ToList();
+                    .ToListAsync();
 
                 return View(model);
             }
 
-            AppUser? user = context.Users.FirstOrDefault(u => u.Id == model.Id);
+            AppUser? user = await context.Users.FirstOrDefaultAsync(u => u.Id == model.Id);
 
             if (user == null)
             {
@@ -156,11 +163,11 @@ namespace WebVacantionManager.Controllers
             user.LastName = model.LastName;
             user.TeamId = model.TeamId;
 
-            var currentRoles = userManager.GetRolesAsync(user).Result;
+            var currentRoles = await userManager.GetRolesAsync(user);
 
             if (currentRoles.Any())
             {
-                var removeResult = userManager.RemoveFromRolesAsync(user, currentRoles).Result;
+                var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles);
 
                 if (!removeResult.Succeeded)
                 {
@@ -170,7 +177,7 @@ namespace WebVacantionManager.Controllers
 
             if (!string.IsNullOrWhiteSpace(model.RoleName))
             {
-                var addResult = userManager.AddToRoleAsync(user, model.RoleName).Result;
+                var addResult = await userManager.AddToRoleAsync(user, model.RoleName);
 
                 if (!addResult.Succeeded)
                 {
@@ -180,45 +187,47 @@ namespace WebVacantionManager.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Teams = context.Teams
+                model.Teams = await context.Teams
                     .AsNoTracking()
                     .Select(t => new SelectListItem
                     {
                         Value = t.Id.ToString(),
                         Text = t.TeamName
                     })
-                    .ToList();
+                    .ToListAsync();
 
-                model.Roles = roleManager.Roles
+                model.Roles = await roleManager.Roles
                     .AsNoTracking()
                     .Select(r => new SelectListItem
                     {
                         Value = r.Name!,
                         Text = r.Name!
                     })
-                    .ToList();
+                    .ToListAsync();
 
                 return View(model);
             }
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Потребителят е редактиран успешно.";
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            AppUser? user = context.Users
+            AppUser? user = await context.Users
                 .AsNoTracking()
                 .Include(u => u.Team)
-                .FirstOrDefault(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            string? roleName = userManager.GetRolesAsync(user).Result.FirstOrDefault();
+            string? roleName = (await userManager.GetRolesAsync(user)).FirstOrDefault();
 
             UsersDeleteViewModel model = new UsersDeleteViewModel
             {
@@ -233,38 +242,57 @@ namespace WebVacantionManager.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            AppUser? user = context.Users.FirstOrDefault(u => u.Id == id);
+            AppUser? user = await context.Users
+                .Include(u => u.VacationRequests)
+                .Include(u => u.Team)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var roles = userManager.GetRolesAsync(user).Result;
+            bool hasVacationRequests = user.VacationRequests.Any();
+
+            bool isTeamLeader = await context.Teams
+                .AnyAsync(t => t.TeamLeaderId == user.Id);
+
+            bool isDeveloperInTeam = await context.Teams
+                .AnyAsync(t => t.Developers.Any(d => d.Id == user.Id));
+
+            if (hasVacationRequests || isTeamLeader || isDeveloperInTeam)
+            {
+                TempData["ErrorMessage"] = "Потребителят не може да бъде изтрит, защото има свързани записи.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
+            var roles = await userManager.GetRolesAsync(user);
 
             if (roles.Any())
             {
-                var removeRolesResult = userManager.RemoveFromRolesAsync(user, roles).Result;
+                var removeRolesResult = await userManager.RemoveFromRolesAsync(user, roles);
 
                 if (!removeRolesResult.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, "Unable to remove user roles.");
-                    return RedirectToAction(nameof(Index));
+                    TempData["ErrorMessage"] = "Неуспешно премахване на ролите на потребителя.";
+                    return RedirectToAction(nameof(Delete), new { id });
                 }
             }
 
-            var deleteResult = userManager.DeleteAsync(user).Result;
+            var deleteResult = await userManager.DeleteAsync(user);
 
             if (!deleteResult.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Unable to delete user.");
-                return RedirectToAction(nameof(Index));
+                TempData["ErrorMessage"] = "Неуспешно изтриване на потребителя.";
+                return RedirectToAction(nameof(Delete), new { id });
             }
 
+            TempData["SuccessMessage"] = "Потребителят е изтрит успешно.";
             return RedirectToAction(nameof(Index));
         }
     }

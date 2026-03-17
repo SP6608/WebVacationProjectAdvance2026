@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebVacantionManager.Data;
 using WebVacantionManager.Models;
+using WebVacantionManager.Services;
+using WebVacantionManager.Services.Contracts;
+
 
 namespace WebVacantionManager
 {
@@ -30,7 +33,9 @@ namespace WebVacantionManager
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddScoped<IVacationRequestService, VacationRequestService>();
+            builder.Services.AddScoped<IProjectService, ProjectService>();
+            builder.Services.AddScoped<ITeamService, TeamService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebVacantionManager.Data;
-using WebVacantionManager.Models;
+using WebVacantionManager.Services.Contracts;
 using WebVacantionManager.ViewModels;
 
 namespace WebVacantionManager.Controllers
@@ -10,68 +8,48 @@ namespace WebVacantionManager.Controllers
     [Authorize]
     public class ProjectsController : Controller
     {
-        private ApplicationDbContext context;
-        public ProjectsController(ApplicationDbContext context)
+        private readonly IProjectService projectService;
+
+        public ProjectsController(IProjectService projectService)
         {
-            this.context = context;
+            this.projectService = projectService;
         }
+
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            ICollection<ProjectDetailsViewModel> models =
-                 context
-                .Projects
-                .AsNoTracking()
-                .Select(p => new ProjectDetailsViewModel()
-                {
-                    Id = p.Id,
-                    ProjectName=p.ProjectName,
-                    Description = p.Description,
-                })
-                .OrderBy(p => p.ProjectName)
-                .ToList();
+            ICollection<ProjectDetailsViewModel> models = await projectService.GetAllAsync();
 
             return View(models);
         }
+
         [HttpGet]
         [Authorize(Roles = "Ceo")]
         public IActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
-        public IActionResult Create(ProjectsCreateViewModel model)
+        [Authorize(Roles = "Ceo")]
+        public async Task<IActionResult> Create(ProjectsCreateViewModel model)
         {
-            if (!ModelState.IsValid) 
-            { 
-              return View(model);
-            }
-            Project p=new Project() 
+            if (!ModelState.IsValid)
             {
-                ProjectName=model.Projectname,
-                Description = model.Description 
-            }; 
-            context.Projects.Add(p);
-            context.SaveChanges();
+                return View(model);
+            }
+
+            await projectService.CreateAsync(model);
+
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            ProjectDetailsViewModel? project = context
-                .Projects
-                .AsNoTracking()
-                .Include(p => p.Teams)
-                .Select(p => new ProjectDetailsViewModel
-                {
-                    Id = p.Id,
-                    ProjectName = p.ProjectName,
-                    Description = p.Description,
-                    Teams = p.Teams.ToList()
-                })
-                .FirstOrDefault(p => p.Id == id);
+            ProjectDetailsViewModel? project = await projectService.GetByIdAsync(id);
 
             if (project == null)
             {
@@ -80,21 +58,12 @@ namespace WebVacantionManager.Controllers
 
             return View(project);
         }
+
         [HttpGet]
         [Authorize(Roles = "Ceo")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            ProjectEditViewModel? model = context
-                .Projects
-                .AsNoTracking()
-                .Where(p => p.Id == id)
-                .Select(p => new ProjectEditViewModel
-                {
-                    Id = p.Id,
-                    ProjectName = p.ProjectName,
-                    Description = p.Description
-                })
-                .FirstOrDefault();
+            ProjectEditViewModel? model = await projectService.GetForEditAsync(id);
 
             if (model == null)
             {
@@ -103,53 +72,31 @@ namespace WebVacantionManager.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [Authorize(Roles = "Ceo")]
-        public IActionResult Edit(ProjectEditViewModel model)
+        public async Task<IActionResult> Edit(ProjectEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            Project? project = context.Projects.Find(model.Id);
+            bool isEdited = await projectService.EditAsync(model);
 
-            if (project == null)
+            if (!isEdited)
             {
                 return NotFound();
             }
 
-            project.ProjectName = model.ProjectName;
-            project.Description = model.Description;
-
-            context.SaveChanges();
-
             return RedirectToAction(nameof(Index));
         }
-        //Delete
+
         [HttpGet]
         [Authorize(Roles = "Ceo")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            ProjectDeleteViewModel? model = context
-                .Projects
-                .AsNoTracking()
-                .Include(p => p.Teams)
-                .Where(p => p.Id == id)
-                .Select(p => new ProjectDeleteViewModel
-                {
-                    Id = p.Id,
-                    ProjectName = p.ProjectName,
-                    Description = p.Description,
-                    Teams = p.Teams
-                        .Select(t => new TeamSimpleViewModel
-                        {
-                            Id = t.Id,
-                            TeamName = t.TeamName
-                        })
-                        .ToList()
-                })
-                .FirstOrDefault();
+            ProjectDeleteViewModel? model = await projectService.GetForDeleteAsync(id);
 
             if (model == null)
             {
@@ -158,19 +105,17 @@ namespace WebVacantionManager.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [Authorize(Roles = "Ceo")]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Project? project = context.Projects.Find(id);
+            bool isDeleted = await projectService.DeleteAsync(id);
 
-            if (project == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.Projects.Remove(project);
-            context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
