@@ -104,22 +104,8 @@ namespace WebVacantionManager.Controllers
                 LastName = user.LastName,
                 TeamId = user.TeamId,
                 RoleName = currentRole,
-                Teams = await context.Teams
-                    .AsNoTracking()
-                    .Select(t => new SelectListItem
-                    {
-                        Value = t.Id.ToString(),
-                        Text = t.TeamName
-                    })
-                    .ToListAsync(),
-                Roles = await roleManager.Roles
-                    .AsNoTracking()
-                    .Select(r => new SelectListItem
-                    {
-                        Value = r.Name!,
-                        Text = r.Name!
-                    })
-                    .ToListAsync()
+                Teams = await GetTeamsAsync(),
+                Roles = await GetRolesAsync()
             };
 
             return View(model);
@@ -131,24 +117,8 @@ namespace WebVacantionManager.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Teams = await context.Teams
-                    .AsNoTracking()
-                    .Select(t => new SelectListItem
-                    {
-                        Value = t.Id.ToString(),
-                        Text = t.TeamName
-                    })
-                    .ToListAsync();
-
-                model.Roles = await roleManager.Roles
-                    .AsNoTracking()
-                    .Select(r => new SelectListItem
-                    {
-                        Value = r.Name!,
-                        Text = r.Name!
-                    })
-                    .ToListAsync();
-
+                model.Teams = await GetTeamsAsync();
+                model.Roles = await GetRolesAsync();
                 return View(model);
             }
 
@@ -187,24 +157,8 @@ namespace WebVacantionManager.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Teams = await context.Teams
-                    .AsNoTracking()
-                    .Select(t => new SelectListItem
-                    {
-                        Value = t.Id.ToString(),
-                        Text = t.TeamName
-                    })
-                    .ToListAsync();
-
-                model.Roles = await roleManager.Roles
-                    .AsNoTracking()
-                    .Select(r => new SelectListItem
-                    {
-                        Value = r.Name!,
-                        Text = r.Name!
-                    })
-                    .ToListAsync();
-
+                model.Teams = await GetTeamsAsync();
+                model.Roles = await GetRolesAsync();
                 return View(model);
             }
 
@@ -243,7 +197,7 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
@@ -294,6 +248,30 @@ namespace WebVacantionManager.Controllers
 
             TempData["SuccessMessage"] = "Потребителят е изтрит успешно.";
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<List<SelectListItem>> GetTeamsAsync()
+        {
+            return await context.Teams
+                .AsNoTracking()
+                .Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.TeamName
+                })
+                .ToListAsync();
+        }
+
+        private async Task<List<SelectListItem>> GetRolesAsync()
+        {
+            return await roleManager.Roles
+                .AsNoTracking()
+                .Select(r => new SelectListItem
+                {
+                    Value = r.Name!,
+                    Text = r.Name!
+                })
+                .ToListAsync();
         }
     }
 }
