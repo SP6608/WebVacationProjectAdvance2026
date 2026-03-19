@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="WebVacantionManager.Tests/WebVacantionManager.Tests.csproj" Id="8fa8de86-a1c2-4553-a091-2e1021023360" />
   <Project Path="WebVacantionManager/WebVacantionManager.csproj" />
 </Solution>
