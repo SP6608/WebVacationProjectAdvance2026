@@ -30,6 +30,28 @@ namespace WebVacantionManager.Services
                 .ToListAsync();
         }
 
+        public async Task<ICollection<ProjectDetailsViewModel>> GetPagedAsync(int page, int pageSize)
+        {
+            return await context
+                .Projects
+                .AsNoTracking()
+                .OrderBy(p => p.ProjectName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new ProjectDetailsViewModel
+                {
+                    Id = p.Id,
+                    ProjectName = p.ProjectName,
+                    Description = p.Description
+                })
+                .ToListAsync();
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await context.Projects.CountAsync();
+        }
+
         public async Task<ProjectDetailsViewModel?> GetByIdAsync(int id)
         {
             return await context

@@ -62,3 +62,27 @@
         }
     </tbody>
 </table>
+<div class="mt-3">
+    <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)"
+           class="btn btn-secondary @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+        Previous
+    </a>
+
+    <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)"
+           class="btn btn-secondary">
+        Next
+    </a>
+</div>
+<div class="mt-3">
+    <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)"
+           class="btn btn-secondary @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+        Previous
+    </a>
+
+    <span class="mx-2">Page @ViewBag.CurrentPage of @ViewBag.TotalPages</span>
+
+    <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)"
+           class="btn btn-secondary @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+        Next
+    </a>
+</div>

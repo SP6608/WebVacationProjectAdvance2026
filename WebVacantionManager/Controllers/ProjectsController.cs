@@ -17,9 +17,33 @@ namespace WebVacantionManager.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            ICollection<ProjectDetailsViewModel> models = await projectService.GetAllAsync();
+            int pageSize = 5;
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            int totalProjects = await projectService.GetCountAsync();
+            int totalPages = (int)Math.Ceiling((double)totalProjects / pageSize);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            ICollection<ProjectDetailsViewModel> models =
+                await projectService.GetPagedAsync(page, pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
 
             return View(models);
         }
@@ -33,6 +57,7 @@ namespace WebVacantionManager.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Ceo")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProjectsCreateViewModel model)
         {
             if (!ModelState.IsValid)
@@ -75,6 +100,7 @@ namespace WebVacantionManager.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Ceo")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProjectEditViewModel model)
         {
             if (!ModelState.IsValid)
@@ -106,8 +132,9 @@ namespace WebVacantionManager.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Ceo")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             bool isDeleted = await projectService.DeleteAsync(id);
