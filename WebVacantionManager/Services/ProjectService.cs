@@ -14,7 +14,42 @@ namespace WebVacantionManager.Services
         {
             this.context = context;
         }
+        public async Task<ICollection<ProjectDetailsViewModel>> SearchAsync(string? searchTerm, int page, int pageSize)
+        {
+            IQueryable<Project> query = context.Projects.AsNoTracking();
 
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(p =>
+                    p.ProjectName.Contains(searchTerm) ||
+                    (p.Description != null && p.Description.Contains(searchTerm)));
+            }
+
+            return await query
+                .OrderBy(p => p.ProjectName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new ProjectDetailsViewModel
+                {
+                    Id = p.Id,
+                    ProjectName = p.ProjectName,
+                    Description = p.Description
+                })
+                .ToListAsync();
+        }
+        public async Task<int> GetSearchCountAsync(string? searchTerm)
+        {
+            IQueryable<Project> query = context.Projects.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(p =>
+                    p.ProjectName.Contains(searchTerm) ||
+                    (p.Description != null && p.Description.Contains(searchTerm)));
+            }
+
+            return await query.CountAsync();
+        }
         public async Task<ICollection<ProjectDetailsViewModel>> GetAllAsync()
         {
             return await context

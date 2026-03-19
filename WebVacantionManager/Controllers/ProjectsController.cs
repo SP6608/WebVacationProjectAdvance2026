@@ -17,7 +17,7 @@ namespace WebVacantionManager.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(string? searchTerm, int page = 1)
         {
             int pageSize = 5;
 
@@ -26,7 +26,7 @@ namespace WebVacantionManager.Controllers
                 page = 1;
             }
 
-            int totalProjects = await projectService.GetCountAsync();
+            int totalProjects = await projectService.GetSearchCountAsync(searchTerm);
             int totalPages = (int)Math.Ceiling((double)totalProjects / pageSize);
 
             if (totalPages == 0)
@@ -40,10 +40,11 @@ namespace WebVacantionManager.Controllers
             }
 
             ICollection<ProjectDetailsViewModel> models =
-                await projectService.GetPagedAsync(page, pageSize);
+                await projectService.SearchAsync(searchTerm, page, pageSize);
 
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
+            ViewBag.SearchTerm = searchTerm;
 
             return View(models);
         }
