@@ -18,7 +18,16 @@ namespace WebVacantionManager.Controllers
             return View();
         }
 
-       
+        [Route("Home/Error/{statusCode?}")]
+        public IActionResult Error(int? statusCode = null)
+        {
+            if (statusCode == 404)
+            {
+                return View("Error404");
+            }
+
+            return View("Error500");
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
