@@ -42,8 +42,10 @@ namespace WebVacantionManager.Services.Contracts
             string currentUserId);
 
         Task<VacationRequestOperationResult> DeleteRequestAsync(
-            int id,
-            string currentUserId);
+          int id,
+          string currentUserId,
+          bool isCeo,
+          bool isTeamLead);
 
         Task<bool> ExistsAsync(int id);
     }

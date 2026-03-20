@@ -249,10 +249,12 @@ namespace WebVacantionManager.Services
         }
 
         public async Task<VacationRequestOperationResult> DeleteRequestAsync(
-            int id,
-            string currentUserId)
+     int id,
+     string currentUserId,
+     bool isCeo,
+     bool isTeamLead)
         {
-            VacationRequest? request = await context.VacationRequests
+            var request = await context.VacationRequests
                 .FirstOrDefaultAsync(vr => vr.Id == id);
 
             if (request == null)
@@ -260,11 +262,31 @@ namespace WebVacantionManager.Services
                 return VacationRequestOperationResult.NotFound;
             }
 
-            if (request.ApplicantId != currentUserId)
+            
+            if (isCeo)
             {
-                return VacationRequestOperationResult.Forbidden;
+                
+            }
+            
+            else if (isTeamLead)
+            {
+                bool isInTeam = await IsUserInTeamOfLeader(request.ApplicantId, currentUserId);
+
+                if (!isInTeam)
+                {
+                    return VacationRequestOperationResult.Forbidden;
+                }
+            }
+            
+            else
+            {
+                if (request.ApplicantId != currentUserId)
+                {
+                    return VacationRequestOperationResult.Forbidden;
+                }
             }
 
+            
             if (request.Status != RequestStatus.Pending)
             {
                 return VacationRequestOperationResult.AlreadyProcessed;
@@ -291,6 +313,13 @@ namespace WebVacantionManager.Services
                     Text = vt.ToString()
                 })
                 .ToList();
+        }
+        private async Task<bool> IsUserInTeamOfLeader(string applicantId, string leaderId)
+        {
+            return await context.Teams
+                .AnyAsync(t =>
+                    t.TeamLeaderId == leaderId &&
+                    t.Developers.Any(d => d.Id == applicantId));
         }
     }
 }

@@ -252,8 +252,11 @@ namespace WebVacantionManager.Controllers
                 return Unauthorized();
             }
 
+            bool isCeo = User.IsInRole("Ceo");
+            bool isTeamLead = User.IsInRole("TeamLead");
+
             VacationRequestOperationResult result =
-                await vacationRequestService.DeleteRequestAsync(id, currentUserId);
+                await vacationRequestService.DeleteRequestAsync(id, currentUserId, isCeo, isTeamLead);
 
             if (result == VacationRequestOperationResult.NotFound)
             {

@@ -65,7 +65,7 @@ namespace WebVacantionManager.Tests.Services
         [Test]
         public async Task DeleteRequestAsync_ShouldReturnNotFound_WhenMissing()
         {
-            var result = await service.DeleteRequestAsync(999, "user1");
+            var result = await service.DeleteRequestAsync(999, "user1", false, false);
 
             result.Should().Be(VacationRequestOperationResult.NotFound);
         }
@@ -78,13 +78,14 @@ namespace WebVacantionManager.Tests.Services
                 DateFrom = DateTime.Today,
                 DateTo = DateTime.Today.AddDays(1),
                 ApplicantId = "user1",
-                VacationType = VacationType.PaidLeave
+                VacationType = VacationType.PaidLeave,
+                Status = RequestStatus.Pending
             };
 
             context.VacationRequests.Add(request);
             await context.SaveChangesAsync();
 
-            var result = await service.DeleteRequestAsync(request.Id, "user1");
+            var result = await service.DeleteRequestAsync(request.Id, "user1", false, false);
 
             result.Should().Be(VacationRequestOperationResult.Success);
             context.VacationRequests.Count().Should().Be(0);
