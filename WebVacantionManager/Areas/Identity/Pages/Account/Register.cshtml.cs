@@ -133,6 +133,7 @@ namespace WebVacantionManager.Areas.Identity.Pages.Account
                 {
                     if (!hasUsers)
                     {
+                        await _userManager.AddToRoleAsync(user, "Administrator");
                         await _userManager.AddToRoleAsync(user, "Ceo");
                     }
                     else

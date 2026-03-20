@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebVacantionManager.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDataBaseAndSeedData : Migration
+    public partial class CreateDatabaseAndSeedRoles : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -214,6 +214,7 @@ namespace WebVacantionManager.Migrations
                 {
                     { "3a310333-c4a5-4457-9065-a861e635d848", null, "Ceo", "CEO" },
                     { "96554597-d11d-48bb-84d5-bbf7442a7afc", null, "Developer", "DEVELOPER" },
+                    { "b4d5e8fa-7d76-4ff9-95f1-1f1f3a52c111", null, "Administrator", "ADMINISTRATOR" },
                     { "dd504816-18f8-420f-a69f-ca3e6386ba5c", null, "TeamLead", "TEAMLEAD" },
                     { "e3233cd7-132a-45ca-8a32-7160411726ed", null, "Unassigned", "UNASSIGNED" }
                 });
@@ -221,7 +222,7 @@ namespace WebVacantionManager.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TeamId", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "1f1a1111-1111-1111-1111-111111111111", 0, "e5d26b9b-c457-4ca5-82bf-0e209551432e", "ceo@company.com", true, "Ivan", "Petrov", false, null, "CEO@COMPANY.COM", "CEO@COMPANY.COM", "AQAAAAIAAYagAAAAEGvYcq95VFPCL4pNbA6MQw9/EseIYcu/MkgRnzHb2L6dypvuTK/IdYXCz4p0Vj9hxg==", null, false, "59aaa4bc-b57f-4b21-a720-5df77a3d3e47", null, false, "ceo@company.com" });
+                values: new object[] { "1f1a1111-1111-1111-1111-111111111111", 0, "67658fab-3326-4b74-875a-62b75e6ab1de", "ceo@company.com", true, "Ivan", "Petrov", false, null, "CEO@COMPANY.COM", "CEO@COMPANY.COM", "AQAAAAIAAYagAAAAEOmkoGB1TJ+Dce4kkhbW8cWdaSneJp7VwU4H4MLP7uYhBsMa1ZGWos6fU+59VS38Tw==", null, false, "9bd84838-8797-4890-8486-835d75a855d9", null, false, "ceo@company.com" });
 
             migrationBuilder.InsertData(
                 table: "Projects",
@@ -259,8 +260,8 @@ namespace WebVacantionManager.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TeamId", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "2f2b2222-2222-2222-2222-222222222222", 0, "67642415-a376-481c-ac96-fdeb5616883f", "teamlead@company.com", true, "Maria", "Ivanova", false, null, "TEAMLEAD@COMPANY.COM", "TEAMLEAD@COMPANY.COM", "AQAAAAIAAYagAAAAEDbPLwDSRKju60mZEZHryt/WEY0d/eIfpqXLqynh9TQmIvYZa80gtvHNuiip4Zi+Aw==", null, false, "9aeababc-872e-4178-af2c-0af0e5fd57ba", 1, false, "teamlead@company.com" },
-                    { "3f3c3333-3333-3333-3333-333333333333", 0, "c16ab847-4042-4ec2-b3d2-fae4d69f52f6", "developer@company.com", true, "Georgi", "Dimitrov", false, null, "DEVELOPER@COMPANY.COM", "DEVELOPER@COMPANY.COM", "AQAAAAIAAYagAAAAELh7cdahwG8ctlW2QyA7fL1OffW4JnGyxIrkFEdO5l3wePM3bBOXYZp6O5y81Np8Xw==", null, false, "4c5a4e3b-75d9-40e3-86f3-a3fd7170d4b5", 1, false, "developer@company.com" }
+                    { "2f2b2222-2222-2222-2222-222222222222", 0, "a77cf355-120b-4a78-80cc-15d7f766e38f", "teamlead@company.com", true, "Maria", "Ivanova", false, null, "TEAMLEAD@COMPANY.COM", "TEAMLEAD@COMPANY.COM", "AQAAAAIAAYagAAAAEMbiJVk9fJQsJ6fV8TzSy89cC9w4yWNXV+bLEQbXHC2jUUb5+D9YYxxQiPi1H+YuQw==", null, false, "75f85684-32eb-49bb-a653-7ff9ea041f06", 1, false, "teamlead@company.com" },
+                    { "3f3c3333-3333-3333-3333-333333333333", 0, "e7936acd-87b5-473f-b62b-428540187062", "developer@company.com", true, "Georgi", "Dimitrov", false, null, "DEVELOPER@COMPANY.COM", "DEVELOPER@COMPANY.COM", "AQAAAAIAAYagAAAAEDVY7B17VbYKWhK5kW0jXmnI0yeM71Am+8Jo99aeBRvc1vqjWZGubMKqT7p7QjbiuA==", null, false, "dc1199ff-17af-4ffa-a58b-e06cd3775595", 1, false, "developer@company.com" }
                 });
 
             migrationBuilder.InsertData(

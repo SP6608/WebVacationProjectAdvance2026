@@ -11,6 +11,12 @@ namespace WebVacantionManager.Cammon
             {
                 new IdentityRole
                 {
+                    Id = "b4d5e8fa-7d76-4ff9-95f1-1f1f3a52c111",
+                    Name = "Administrator",
+                    NormalizedName = "ADMINISTRATOR"
+                },
+                new IdentityRole
+                {
                     Id = "3a310333-c4a5-4457-9065-a861e635d848",
                     Name = "Ceo",
                     NormalizedName = "CEO"
