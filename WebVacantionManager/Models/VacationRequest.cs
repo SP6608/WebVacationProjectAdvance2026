@@ -19,12 +19,12 @@ namespace WebVacationManager.Models
 
         public bool IsHalfDay { get; set; }
 
-        public bool IsApproved { get; set; } = false;
+        [Required]
+        public RequestStatus Status { get; set; } = RequestStatus.Pending;
 
         [Required]
         public VacationType VacationType { get; set; }
 
-        // Foreign Key
         public string ApplicantId { get; set; } = null!;
 
         [ForeignKey(nameof(ApplicantId))]
@@ -36,5 +36,12 @@ namespace WebVacationManager.Models
         PaidLeave,
         UnpaidLeave,
         SickLeave
+    }
+
+    public enum RequestStatus
+    {
+        Pending,
+        Approved,
+        Rejected
     }
 }

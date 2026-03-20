@@ -16,7 +16,7 @@
         <p><strong>Half Day:</strong> @(Model.IsHalfDay ? "Yes" : "No")</p>
         <p>
             <strong>Status:</strong>
-            @(Model.IsApproved ? "Approved" : "Pending")
+            @Model.Status
         </p>
 
         <p class="text-danger mt-3">

@@ -8,10 +8,12 @@ namespace WebVacantionManager.Controllers
     public class MyRequestsController : Controller
     {
         private readonly ApplicationDbContext context;
+
         public MyRequestsController(ApplicationDbContext context)
         {
             this.context = context;
         }
+
         public IActionResult Index()
         {
             var model = context.VacationRequests
@@ -26,7 +28,7 @@ namespace WebVacantionManager.Controllers
                     CreatedOn = v.CreatedOn,
                     VacationType = v.VacationType.ToString(),
                     IsHalfDay = v.IsHalfDay,
-                    IsApproved = v.IsApproved
+                    Status = v.Status.ToString()
                 })
                 .ToList();
 

@@ -41,7 +41,7 @@ namespace WebVacantionManager.Services
                     DateTo = vr.DateTo,
                     CreatedOn = vr.CreatedOn,
                     IsHalfDay = vr.IsHalfDay,
-                    IsApproved = vr.IsApproved,
+                    Status = vr.Status.ToString(),
                     VacationType = vr.VacationType.ToString()
                 })
                 .ToListAsync();
@@ -74,7 +74,7 @@ namespace WebVacantionManager.Services
                 VacationType = model.VacationType,
                 ApplicantId = userId,
                 CreatedOn = DateTime.UtcNow,
-                IsApproved = false
+                Status = RequestStatus.Pending
             };
 
             await context.VacationRequests.AddAsync(request);
@@ -103,12 +103,12 @@ namespace WebVacantionManager.Services
                 return VacationRequestOperationResult.Forbidden;
             }
 
-            if (request.IsApproved)
+            if (request.Status != RequestStatus.Pending)
             {
                 return VacationRequestOperationResult.AlreadyProcessed;
             }
 
-            request.IsApproved = true;
+            request.Status = RequestStatus.Approved;
             await context.SaveChangesAsync();
 
             return VacationRequestOperationResult.Success;
@@ -145,7 +145,7 @@ namespace WebVacantionManager.Services
                 DateTo = request.DateTo,
                 CreatedOn = request.CreatedOn,
                 IsHalfDay = request.IsHalfDay,
-                IsApproved = request.IsApproved,
+                Status = request.Status.ToString(),
                 VacationType = request.VacationType.ToString()
             };
         }
@@ -163,7 +163,7 @@ namespace WebVacantionManager.Services
                 return null;
             }
 
-            if (request.ApplicantId != currentUserId || request.IsApproved)
+            if (request.ApplicantId != currentUserId || request.Status != RequestStatus.Pending)
             {
                 return null;
             }
@@ -196,7 +196,7 @@ namespace WebVacantionManager.Services
                 return VacationRequestOperationResult.Forbidden;
             }
 
-            if (request.IsApproved)
+            if (request.Status != RequestStatus.Pending)
             {
                 return VacationRequestOperationResult.AlreadyProcessed;
             }
@@ -230,7 +230,7 @@ namespace WebVacantionManager.Services
                 return null;
             }
 
-            if (request.ApplicantId != currentUserId || request.IsApproved)
+            if (request.ApplicantId != currentUserId || request.Status != RequestStatus.Pending)
             {
                 return null;
             }
@@ -243,6 +243,7 @@ namespace WebVacantionManager.Services
                 DateTo = request.DateTo,
                 CreatedOn = request.CreatedOn,
                 IsHalfDay = request.IsHalfDay,
+                Status = request.Status.ToString(),
                 VacationType = request.VacationType.ToString()
             };
         }
@@ -264,7 +265,7 @@ namespace WebVacantionManager.Services
                 return VacationRequestOperationResult.Forbidden;
             }
 
-            if (request.IsApproved)
+            if (request.Status != RequestStatus.Pending)
             {
                 return VacationRequestOperationResult.AlreadyProcessed;
             }

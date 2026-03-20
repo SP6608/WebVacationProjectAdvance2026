@@ -14,9 +14,21 @@
         <p><strong>Created On:</strong> @Model.CreatedOn.ToShortDateString()</p>
         <p><strong>Vacation Type:</strong> @Model.VacationType</p>
         <p><strong>Half Day:</strong> @(Model.IsHalfDay ? "Yes" : "No")</p>
+
         <p>
             <strong>Status:</strong>
-            @(Model.IsApproved ? "Approved" : "Pending")
+            @if (Model.Status == "Approved")
+            {
+                <span class="badge bg-success">Approved</span>
+            }
+            else if (Model.Status == "Rejected")
+            {
+                <span class="badge bg-danger">Rejected</span>
+            }
+            else
+            {
+                <span class="badge bg-warning text-dark">Pending</span>
+            }
         </p>
 
         <a asp-action="Index" class="btn btn-secondary">Back</a>

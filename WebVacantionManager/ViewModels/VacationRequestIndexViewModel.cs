@@ -9,6 +9,6 @@
         public DateTime CreatedOn { get; set; }
         public string VacationType { get; set; } = null!;
         public bool IsHalfDay { get; set; }
-        public bool IsApproved { get; set; }
+        public string Status { get; set; } = null!;
     }
 }
