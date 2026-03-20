@@ -50,6 +50,11 @@ namespace WebVacantionManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VacationRequestCreateViewModel model)
         {
+            if (model.DateTo < model.DateFrom)
+            {
+                ModelState.AddModelError(nameof(model.DateTo), "End date cannot be earlier than start date.");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.VacationTypes = (await vacationRequestService.GetCreateModelAsync()).VacationTypes;
@@ -67,7 +72,9 @@ namespace WebVacantionManager.Controllers
 
             if (!success)
             {
-                return BadRequest();
+                ModelState.AddModelError(string.Empty, "Unable to create vacation request.");
+                model.VacationTypes = (await vacationRequestService.GetCreateModelAsync()).VacationTypes;
+                return View(model);
             }
 
             return RedirectToAction(nameof(Index));
@@ -167,11 +174,15 @@ namespace WebVacantionManager.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(VacationRequestEditViewModel model)
         {
+            if (model.DateTo < model.DateFrom)
+            {
+                ModelState.AddModelError(nameof(model.DateTo), "End date cannot be earlier than start date.");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.VacationTypes = (await vacationRequestService.GetCreateModelAsync()).VacationTypes;

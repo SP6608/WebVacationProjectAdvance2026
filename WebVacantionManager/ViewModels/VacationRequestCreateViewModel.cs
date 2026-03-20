@@ -8,9 +8,11 @@ namespace WebVacantionManager.ViewModels
     {
         [Required]
         [Display(Name = "Date From")]
+        [DataType(DataType.Date)]
         public DateTime DateFrom { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
         [Display(Name = "Date To")]
         public DateTime DateTo { get; set; }
 
