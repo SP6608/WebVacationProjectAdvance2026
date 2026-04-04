@@ -292,7 +292,7 @@ namespace WebVacantionManager.Migrations
                         {
                             Id = "1f1a1111-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "90269b54-e78e-48d6-82c5-7bb242d9719c",
+                            ConcurrencyStamp = "e830c744-3147-4567-a626-7e5f371c6f51",
                             Email = "ceo@company.com",
                             EmailConfirmed = true,
                             FirstName = "Ivan",
@@ -300,9 +300,9 @@ namespace WebVacantionManager.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "CEO@COMPANY.COM",
                             NormalizedUserName = "CEO@COMPANY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJPRphZ5vUhfUGzqp/I6bk9DqznvbAXenOevIBe7+AOPxThWoUks2ROStfnPGyhEUQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAUy4eScTSJeJO8o5CID3X8lVyeoBsXo/KNC3cHhsy7zKnTy7EyM0jn62pe/efqNtg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1a4e6ae5-3ca5-4fae-9d37-6e03cb5ad33c",
+                            SecurityStamp = "79c629c2-bba0-462f-89fa-21995f147c1c",
                             TwoFactorEnabled = false,
                             UserName = "ceo@company.com"
                         },
@@ -310,7 +310,7 @@ namespace WebVacantionManager.Migrations
                         {
                             Id = "2f2b2222-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e960d52a-b49b-4aa3-8836-dda8c6800538",
+                            ConcurrencyStamp = "4e7346ff-35a8-4381-8833-33e0665199fd",
                             Email = "teamlead@company.com",
                             EmailConfirmed = true,
                             FirstName = "Maria",
@@ -318,9 +318,9 @@ namespace WebVacantionManager.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TEAMLEAD@COMPANY.COM",
                             NormalizedUserName = "TEAMLEAD@COMPANY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECP1p5chDFuKNIvMuiunkNYtp7s2h7u/28Ri3UKY2U3tGRwMQ67z3Fgnu1rMDCXV7w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHw7AUoDle4frejZAt0D/ZdgyCTGpA7oHGzlOdPsu9ivmTZGFx/N+N4Pqwc9ZuB47Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "60c2da8a-9cd2-4315-a452-4c5c91c07bc8",
+                            SecurityStamp = "9498f2c7-3ffb-459f-bef4-f578b5e35dd4",
                             TeamId = 1,
                             TwoFactorEnabled = false,
                             UserName = "teamlead@company.com"
@@ -329,7 +329,7 @@ namespace WebVacantionManager.Migrations
                         {
                             Id = "3f3c3333-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b68e93e3-16a4-43c1-b6b8-66338a7cf8ba",
+                            ConcurrencyStamp = "5edb4a92-361f-4325-9192-f3bad274cdba",
                             Email = "developer@company.com",
                             EmailConfirmed = true,
                             FirstName = "Georgi",
@@ -337,9 +337,9 @@ namespace WebVacantionManager.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DEVELOPER@COMPANY.COM",
                             NormalizedUserName = "DEVELOPER@COMPANY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPTkObE9zV0TQQtZlDlPI2ipK8aM+YIyLs7W/P3dhKYUIC3qm9Aj1MhBhXRx2OPrPw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEADiUDHghqcHBrkr5NiBIxOg4McBGxAnI68GBkk8N+qQiLr+BXPkdA2GH6Y/Cwmwsw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9c6bd0f6-5c58-400e-9cd2-4b34a5dfdf28",
+                            SecurityStamp = "bacf50fc-45d4-4f31-8252-345f91c7d723",
                             TeamId = 1,
                             TwoFactorEnabled = false,
                             UserName = "developer@company.com"
